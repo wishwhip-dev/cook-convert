@@ -131,10 +131,9 @@ export function Converter() {
     }
   };
 
-  const answerText =
-    parsed.ok && answer !== null
-      ? `${formatAmount(answer)} ${UNIT_SHORT[values.toUnit]}`
-      : AMOUNT_MESSAGES[parsed.reason];
+  const answerText = parsed.ok
+    ? `${formatAmount(answer)} ${UNIT_SHORT[values.toUnit]}`
+    : AMOUNT_MESSAGES[parsed.reason];
 
   return (
     <div className="flex flex-col gap-6">

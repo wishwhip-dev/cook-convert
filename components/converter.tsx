@@ -121,7 +121,12 @@ export function Converter() {
   const swap = () => applyChange({ fromUnit: values.toUnit, toUnit: values.fromUnit });
 
   const restore = (row: ConversionRow) =>
-    applyChange({ value: String(row.value), fromUnit: row.fromUnit, toUnit: row.toUnit, ingredientId: row.ingredientId });
+    applyChange({
+      value: String(row.value),
+      fromUnit: row.fromUnit,
+      toUnit: row.toUnit,
+      ingredientId: getIngredient(row.ingredientId)?.id ?? FALLBACK_INGREDIENT.id,
+    });
 
   const clearHistory = async () => {
     try {

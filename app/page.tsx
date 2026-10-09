@@ -1,20 +1,29 @@
-import { Button } from "@/components/ui/button";
+import { Converter } from "@/components/converter";
+import { DataCard } from "@/components/data-card";
+import { ReferenceTable } from "@/components/reference-table";
+import { INGREDIENTS } from "@/lib/data/ingredients";
+import { identity } from "./identity";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-4 px-6 py-16">
-      <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
-        Ready to build
-      </p>
-      <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-        Describe this application in the task goal.
-      </h1>
-      <p className="text-lg text-muted-foreground">
-        The coding agent will replace this reviewed starter with the requested product.
-      </p>
-      <div className="mt-2 flex gap-2">
-        <Button>Web app foundation ready</Button>
+    <main className="mx-auto w-full max-w-2xl px-4 pb-16 pt-10 sm:px-6">
+      <header className="mb-6">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{identity.name}</h1>
+        <p className="mt-2 text-balance text-muted-foreground">
+          Cups, grams, millilitres, tablespoons and teaspoons for {INGREDIENTS.length} everyday
+          ingredients. Type an amount and the answer is here before you finish — and the last
+          conversion is remembered for next time.
+        </p>
+      </header>
+      <div className="flex flex-col gap-6">
+        <Converter />
+        <ReferenceTable />
+        <DataCard />
       </div>
+      <footer className="mt-10 text-sm text-muted-foreground">
+        Measures are level and US-style: 1 cup = 236.6 ml. Weights are typical chart values — for
+        fussy baking, weigh.
+      </footer>
     </main>
   );
 }

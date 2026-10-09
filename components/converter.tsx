@@ -85,7 +85,8 @@ export function Converter() {
 
   const ingredient = getIngredient(values.ingredientId) ?? INGREDIENTS[0]!;
   const parsed = parseAmount(values.value);
-  const answer = parsed.ok ? convertValue(parsed.value, values.fromUnit, values.toUnit, ingredient) : null;
+  // Zero when the input is not a valid amount — the answer area shows the message instead.
+  const answer = parsed.ok ? convertValue(parsed.value, values.fromUnit, values.toUnit, ingredient) : 0;
 
   const historyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (historyTimer.current) clearTimeout(historyTimer.current); }, []);

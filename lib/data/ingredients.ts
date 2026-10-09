@@ -174,7 +174,8 @@ export function formatGrams(value: number): string {
   return text.includes(".") ? text.replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "") : text;
 }
 
-export type ParsedAmount = { ok: true; value: number } | { ok: false; reason: "empty" | "invalid" | "negative" };
+export type AmountFailure = "empty" | "invalid" | "negative";
+export type ParsedAmount = { ok: true; value: number } | { ok: false; reason: AmountFailure };
 
 /**
  * What the amount box holds. Empty and unparseable text give no answer rather than a wrong one,

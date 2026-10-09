@@ -33,6 +33,7 @@ import {
   describeAmount,
   formatAmount,
   formatGrams,
+  FALLBACK_INGREDIENT,
   getIngredient,
   INGREDIENTS,
   parseAmount,

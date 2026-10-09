@@ -62,7 +62,7 @@ const QUICK_CHIPS: readonly { label: string; values: FormValues }[] = [
   { label: "1 tbsp honey to tsp", values: { value: "1", fromUnit: "tablespoons", toUnit: "teaspoons", ingredientId: "honey" } },
 ];
 
-const AMOUNT_MESSAGES: Record<Exclude<ParsedAmount["reason"], undefined>, string> = {
+const AMOUNT_MESSAGES: Record<AmountFailure, string> = {
   empty: "Enter a number to convert",
   invalid: "Enter a number, like 250 or 0.5",
   negative: "Negative amounts don\u2019t work here — enter a number from zero up",

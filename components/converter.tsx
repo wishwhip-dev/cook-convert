@@ -142,20 +142,20 @@ export function Converter() {
           {/* The answer comes first and large: it is the thing the eye lands on. */}
           <div aria-live="polite" aria-atomic="true">
             {parsed.ok ? (
-              <p className="break-words text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl">
-                {formatAmount(answer!)}{" "}
-                <span className="text-2xl font-medium text-muted-foreground sm:text-3xl">{UNIT_SHORT[values.toUnit]}</span>
-              </p>
+              <>
+                <p className="break-words text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl">
+                  {formatAmount(answer)}{" "}
+                  <span className="text-2xl font-medium text-muted-foreground sm:text-3xl">{UNIT_SHORT[values.toUnit]}</span>
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground sm:text-base">
+                  {describeAmount(parsed.value, values.fromUnit)} of {ingredient.name} = {answerText}
+                </p>
+              </>
             ) : (
               <p className={`text-2xl font-medium sm:text-3xl ${parsed.reason === "negative" ? "text-destructive" : "text-muted-foreground"}`}>
                 {answerText}
               </p>
             )}
-            {parsed.ok ? (
-              <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-                {describeAmount(parsed.value, values.fromUnit)} of {ingredient.name} = {answerText}
-              </p>
-            ) : null}
             <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
               {ingredient.name}: 1 cup = {formatGrams(ingredient.perCup)} g, 1 tbsp = {formatGrams(ingredient.perTablespoon)} g, 1 tsp = {formatGrams(ingredient.perTeaspoon)} g, 1 ml = {ingredient.density.toFixed(3)} g
             </p>

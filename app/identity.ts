@@ -5,8 +5,8 @@
  * change here reaches every one of them. Keep `name` short and `description` one plain sentence.
  */
 export const identity = {
-  name: "Unit converter",
-  description: "A quick unit converter for cooking: cups, grams, millilitres, tablespoons and teaspoons for common ingredients like flour, sugar and butter.",
+  name: "Kitchen Convert",
+  description: "Convert cups, grams, millilitres, tablespoons and teaspoons for common cooking ingredients, instantly.",
   accent: "#c2410c",
-  initial: "U",
+  initial: "K",
 } as const;

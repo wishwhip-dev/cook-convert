@@ -2,22 +2,39 @@
  * This application's database.
  *
  * The reusable half of the setup is in `lib/storage/` and is not edited. This file is the half
- * that describes the product: which tables exist, what is indexed, how the schema has changed over
- * time, and what a first visit starts with.
+ * that describes the product: which tables exist, what is indexed, and how the schema has changed
+ * over time.
  *
- * **The schema below is an example and nobody has data in it.** If you are building this
- * application for the first time, replace the tables in version 1 with your own, rename the
- * database, and replace or delete the seed alongside them — do not add a version 2 that drops
- * `notes`. The "never edit a shipped version" rule in `docs/storage.md` binds from your first
- * deployment onward, not before it.
+ * This is the first release, so version 1 is entirely ours — the starter's example tables and
+ * seed were replaced, not migrated away from.
  */
 import { defineDatabase } from "@/lib/storage/database";
+import type { Unit } from "@/lib/data/ingredients";
 
-export type Note = {
+/** One entry in the conversion history. */
+export type ConversionRow = {
   id: string;
-  title: string;
-  body: string;
-  /** Epoch millis. Indexed, because the list is ordered by it. */
+  /** The amount that was converted. */
+  value: number;
+  fromUnit: Unit;
+  toUnit: Unit;
+  ingredientId: string;
+  /** The answer in `toUnit`, kept with the row so the list can show it without recomputing. */
+  result: number;
+  /** Epoch millis. Indexed, because the history is ordered by it. */
+  createdAt: number;
+};
+
+/**
+ * The conversion the form opens on — value, units and ingredient — so a reload puts you back
+ * where you were. A single fixed-id row, rewritten on every conversion.
+ */
+export type LastConversionRow = {
+  id: "last";
+  value: number;
+  fromUnit: Unit;
+  toUnit: Unit;
+  ingredientId: string;
   updatedAt: number;
 };
 
@@ -26,36 +43,18 @@ export function newId(): string {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** What a first visit opens to. An app that opens empty looks broken. */
-const SAMPLE_NOTES: Note[] = [
-  {
-    id: "sample-welcome",
-    title: "This note came with the app",
-    body: "It was written once, on your first visit. Delete it and it stays deleted — the seed does not refill a list you emptied on purpose.",
-    updatedAt: Date.now(),
-  },
-  {
-    id: "sample-storage",
-    title: "Everything here lives in this browser",
-    body: "No account, no sync, no other visitor can see it. Export to a file to carry it anywhere else.",
-    updatedAt: Date.now() - 60_000,
-  },
-];
-
-export const database = defineDatabase<{ notes: Note }>({
+export const database = defineDatabase<{
+  conversions: ConversionRow;
+  lastConversion: LastConversionRow;
+}>({
   // Part of the origin's storage identity. Renaming it does not migrate anything — it points the
   // application at a different, empty database and abandons the old one in place. That is exactly
   // what you want on a first build, and never what you want afterwards.
-  name: "starter-app",
+  name: "kitchen-convert",
   versions: [
-    // Only the primary key and the properties queried on. `title` and `body` are stored but never
-    // filtered or sorted by, so indexing them would cost writes and buy nothing.
-    { version: 1, stores: { notes: "id, updatedAt" } },
+    // Only the primary key and the properties queried on. History rows are read newest-first via
+    // `createdAt`; `lastConversion` is always fetched by its fixed id.
+    { version: 1, stores: { conversions: "id, createdAt", lastConversion: "id" } },
   ],
-  // Written once, inside `ready()`, in one transaction with its own marker. Do not hand-roll this:
-  // no `meta` table, no flag, no promise to dedupe a double mount — see `docs/storage.md`.
-  seed: {
-    tables: ["notes"],
-    run: async (db) => { await db.notes.bulkAdd(SAMPLE_NOTES); },
-  },
+  // No seed: the converter opens on a sensible default conversion, and an empty history says so.
 });

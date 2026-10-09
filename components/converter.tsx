@@ -39,6 +39,7 @@ import {
   UNITS,
   UNIT_LABELS,
   UNIT_SHORT,
+  type AmountFailure,
   type ParsedAmount,
   type Unit,
 } from "@/lib/data/ingredients";
